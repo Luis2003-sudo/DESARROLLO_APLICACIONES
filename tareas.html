@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tareas | Portafolio Académico - José Luis Espinal Huamán</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="progress-bar" id="progressBar"></div>
+
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-grid"></div>
+
+  <button id="backToTop" class="back-to-top" aria-label="Volver arriba">↑</button>
+
+  <div class="page">
+    <header class="navbar">
+      <div class="brand">
+        <div class="avatar">J</div>
+        <span class="brand-name">José Luis Espinal Huamán</span>
+      </div>
+
+      <nav class="menu">
+        <a href="index.html">Inicio</a>
+        <a href="tareas.html" class="active">Tareas</a>
+        <a href="perfil.html">Perfil</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="themeToggle" class="theme-toggle" aria-label="Cambiar tema">
+          <span class="theme-toggle-icon">🌙</span>
+        </button>
+      </div>
+    </header>
+
+    <section class="section-shell reveal">
+      <div class="section-heading">
+        <span class="section-tag">Panel académico</span>
+        <h1 class="section-title">Tareas y evidencias del curso</h1>
+        <p class="section-text">
+          Explora las actividades por unidad, busca temas específicos y accede
+          rápidamente a cada semana con sus materiales y evidencias.
+        </p>
+      </div>
+
+      <div class="weeks-toolbar">
+        <div class="search-box">
+          <input
+            type="text"
+            id="weekSearch"
+            placeholder="Buscar por semana, tema o unidad..."
+          />
+        </div>
+
+        <div class="filter-group">
+          <button class="filter-btn active" data-filter="all">Todas</button>
+          <button class="filter-btn" data-filter="unidad1">Unidad I</button>
+          <button class="filter-btn" data-filter="unidad2">Unidad II</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="units-section tasks-page">
+      <div class="unit-block reveal">
+        <div class="unit-header">
+          <span class="unit-tag">UNIDAD I</span>
+          <h3>Programación Orientada a Objetos</h3>
+          <p>Semanas 1 a 4</p>
+        </div>
+
+        <div class="weeks-grid">
+          <article class="week-card reveal" data-unit="unidad1" data-title="semana 1 apache maven git github poo">
+            <div class="week-top">
+              <span class="week-number">01</span>
+              <span class="week-label">Completado</span>
+            </div>
+            <h4>Semana 1</h4>
+            <p class="week-topic">Apache Maven y Git/GitHub</p>
+            <p>
+              Introducción a herramientas fundamentales para el desarrollo y la
+              gestión de proyectos.
+            </p>
+            <a href="semana1.html" class="week-btn">Ver semana</a>
+          </article>
+
+          <article class="week-card reveal" data-unit="unidad1" data-title="semana 2 metodos poo">
+            <div class="week-top">
+              <span class="week-number">02</span>
+              <span class="week-label">Completado</span>
+            </div>
+            <h4>Semana 2</h4>
+            <p class="week-topic">Métodos</p>
+            <p>
+              Desarrollo de conceptos sobre métodos, estructura y aplicación en
+              ejercicios del curso.
+            </p>
+            <a href="semana2.html" class="week-btn">Ver semana</a>
+          </article>
+
+          <article class="week-card reveal" data-unit="unidad1" data-title="semana 3 programacion orientada a objetos poo">
+            <div class="week-top">
+              <span class="week-number">03</span>
+              <span class="week-label">Completado</span>
+            </div>
+            <h4>Semana 3</h4>
+            <p class="week-topic">Programación Orientada a Objetos</p>
+            <p>
+              Aplicación de conceptos centrales de POO y fortalecimiento de la
+              lógica de solución.
+            </p>
+            <a href="semana3.html" class="week-btn">Ver semana</a>
+          </article>
+
+          <article class="week-card reveal" data-unit="unidad1" data-title="semana 4 programacion orientada a objetos poo">
+            <div class="week-top">
+              <span class="week-number">04</span>
+              <span class="week-label">Completado</span>
+            </div>
+            <h4>Semana 4</h4>
+            <p class="week-topic">Programación Orientada a Objetos</p>
+            <p>
+              Consolidación de conceptos y ejercicios orientados a la estructura
+              y organización del código.
+            </p>
+            <a href="semana4.html" class="week-btn">Ver semana</a>
+          </article>
+        </div>
+      </div>
+
+      <div class="unit-block reveal">
+        <div class="unit-header">
+          <span class="unit-tag">UNIDAD II</span>
+          <h3>Componentes de una Aplicación</h3>
+          <p>Semanas 5 a 8</p>
+        </div>
+
+        <div class="weeks-grid">
+          <article class="week-card reveal" data-unit="unidad2" data-title="semana 5 componentes de una aplicacion">
+            <div class="week-top">
+              <span class="week-number">05</span>
+              <span class="week-label">Completado</span>
+            </div>
+            <h4>Semana 5</h4>
+            <p class="week-topic">Componentes de una Aplicación</p>
+            <p>
+              Introducción a la estructura y elementos que conforman una
+              aplicación.
+            </p>
+            <a href="semana5.html" class="week-btn">Ver semana</a>
+          </article>
+
+          <article class="week-card reveal" data-unit="unidad2" data-title="semana 6 componentes de una aplicacion">
+            <div class="week-top">
+              <span class="week-number">06</span>
+              <span class="week-label">Completado</span>
+            </div>
+            <h4>Semana 6</h4>
+            <p class="week-topic">Componentes de una Aplicación</p>
+            <p>
+              Aplicación de prácticas relacionadas con el diseño y los
+              componentes funcionales.
+            </p>
+            <a href="semana6.html" class="week-btn">Ver semana</a>
+          </article>
+
+          <article class="week-card reveal" data-unit="unidad2" data-title="semana 7 componentes de una aplicacion">
+            <div class="week-top">
+              <span class="week-number">07</span>
+              <span class="week-label">Completado</span>
+            </div>
+            <h4>Semana 7</h4>
+            <p class="week-topic">Componentes de una Aplicación</p>
+            <p>
+              Continuidad del bloque con evidencias enfocadas en la estructura
+              de aplicaciones.
+            </p>
+            <a href="semana7.html" class="week-btn">Ver semana</a>
+          </article>
+
+          <article class="week-card reveal" data-unit="unidad2" data-title="semana 8 componentes de una aplicacion">
+            <div class="week-top">
+              <span class="week-number">08</span>
+              <span class="week-label">Completado</span>
+            </div>
+            <h4>Semana 8</h4>
+            <p class="week-topic">Componentes de una Aplicación</p>
+            <p>
+              Cierre del bloque temático con evidencias y material final del
+              curso.
+            </p>
+            <a href="semana8.html" class="week-btn">Ver semana</a>
+          </article>
+        </div>
+
+        <p id="noResultsMessage" class="no-results hidden">
+          No se encontraron semanas con ese criterio de búsqueda.
+        </p>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>© 2026 José Luis Espinal Huamán - Universidad Peruana Los Andes</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Semana 5 – Componentes de una Aplicación</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- ELEMENTOS GLOBALES -->
+  <div class="progress-bar" id="progressBar"></div>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-grid"></div>
+  <button id="backToTop" class="back-to-top" aria-label="Volver arriba">↑</button>
+
+  <div class="page">
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+      <div class="brand">
+        <div class="avatar">J</div>
+        <span class="brand-name">José Luis Espinal Huamán</span>
+      </div>
+
+      <nav class="menu">
+        <a href="index.html">Inicio</a>
+        <a href="tareas.html" class="active">Tareas</a>
+        <a href="perfil.html">Perfil</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="themeToggle" class="theme-toggle" aria-label="Cambiar tema">
+          <span class="theme-toggle-icon">🌙</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENIDO -->
+    <section class="week-detail-page reveal">
+      <div class="week-detail-card">
+
+        <!-- CABECERA -->
+        <div class="week-detail-header">
+          <div class="week-detail-title">
+            <div class="week-detail-icon">📄</div>
+            <div class="week-detail-text">
+              <h1>Semana 5 – Componentes de una Aplicación</h1>
+              <p>Unidad II · Componentes de una Aplicación</p>
+            </div>
+          </div>
+
+          <!-- ✅ BOTONES (TODOS LOS QUE TENÍAS) -->
+          <div class="week-resources">
+
+            <a
+              href="https://github.com/Luis2003-sudo/DESARROLLO_APLICACIONES/tree/main/tareas_semanales/semana5"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="week-github-btn"
+            >
+              🌐 Ver carpeta en GitHub
+            </a>
+
+            <a
+              href="https://github.com/Luis2003-sudo/DESARROLLO_APLICACIONES/blob/main/tareas_semanales/semana5/ACTIVIDAD_SEMANA_5.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="week-github-btn"
+            >
+              📄 Ver actividad (PDF)
+            </a>
+
+            <a
+              href="https://github.com/Luis2003-sudo/DESARROLLO_APLICACIONES/tree/main/tareas_semanales/semana5"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="week-github-btn"
+            >
+              📊 Datos GitHub
+            </a>
+
+          </div>
+        </div>
+
+        <div class="week-detail-divider"></div>
+
+        <!-- CUERPO -->
+        <div class="week-detail-body">
+          <span class="week-detail-badge">Resumen de la semana</span>
+
+          <div class="week-summary-card reveal">
+            <p>
+              Esta semana marcó el inicio del bloque sobre Componentes de una
+              Aplicación, identificando los elementos esenciales que conforman
+              una solución informática y su correcta organización.
+            </p>
+
+            <ul>
+              <li>Introducción a componentes funcionales.</li>
+              <li>Estructura y organización de aplicaciones.</li>
+              <li>Desarrollo de actividad práctica documentada.</li>
+            </ul>
+          </div>
+
+          <!-- NAVEGACIÓN INFERIOR -->
+          <div class="week-nav">
+            <a href="semana4.html" class="btn btn-secondary">← Semana anterior</a>
+            <a href="tareas.html" class="btn btn-secondary">Volver a tareas</a>
+            <a href="semana6.html" class="btn btn-primary">Semana siguiente →</a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>© 2026 José Luis Espinal Huamán - Universidad Peruana Los Andes</p>
+    </footer>
+  </div>
+
+  <!-- SCRIPT GLOBAL -->
+  <script src="script.js"></script>
+</body>
+</html>
