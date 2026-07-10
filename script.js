@@ -2,8 +2,8 @@ const $=id=>document.getElementById(id);
 const loginPage=$('loginPage'),appPage=$('appPage'),loginForm=$('loginForm'),btnSalir=$('btnSalir'),trabajoForm=$('trabajoForm'),btnAdmin=$('btnAdmin'),adminLoginPage=$('adminLoginPage'),adminLoginForm=$('adminLoginForm'),adminUsuario=$('adminUsuario'),adminPassword=$('adminPassword'),btnCancelarAdmin=$('btnCancelarAdmin'),adminPage=$('adminPage'),btnVolver=$('btnVolver'),adminForm=$('adminForm'),adminUnidad=$('adminUnidad'),adminSemana=$('adminSemana'),adminTexto=$('adminTexto'),adminContenidoLista=$('adminContenidoLista'),trabajosContainer=$('trabajosContainer'),unidadesContainer=$('unidadesContainer'),totalTrabajos=$('totalTrabajos'),emptyMessage=$('emptyMessage'),buscar=$('buscar'),filtroCategoria=$('filtroCategoria'),filtroUnidad=$('filtroUnidad'),filtroSemana=$('filtroSemana'),limpiarFiltros=$('limpiarFiltros'),btnVerTareas=$('btnVerTareas'),btnMiPerfil=$('btnMiPerfil');
 const usuarioCorrecto='P01898G@upla.edu.pe',passwordCorrecto='joseespinal_2003',adminCorrecto='admin@campus.com',passwordAdminCorrecto='admin_2003';
 
-const SUPABASE_URL='https://uxaxkbadbuugteinbepc.supabase.co';
-const SUPABASE_KEY='sb_publishable_IGQGQSn8uL21h6XiHV3jOQ_Jbe42vZR';
+const SUPABASE_URL='https://haozrksoocumwgssbigi.supabase.co';
+const SUPABASE_KEY='sb_publishable_eqeBfmieF0MHYMtIXxrYwg_DUhGE9UJ';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let trabajos=[];
