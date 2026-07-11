@@ -2,38 +2,29 @@ const $=id=>document.getElementById(id);
 const loginPage=$('loginPage'),appPage=$('appPage'),loginForm=$('loginForm'),btnSalir=$('btnSalir'),trabajoForm=$('trabajoForm'),btnAdmin=$('btnAdmin'),adminLoginPage=$('adminLoginPage'),adminLoginForm=$('adminLoginForm'),adminUsuario=$('adminUsuario'),adminPassword=$('adminPassword'),btnCancelarAdmin=$('btnCancelarAdmin'),adminPage=$('adminPage'),btnVolver=$('btnVolver'),adminForm=$('adminForm'),adminUnidad=$('adminUnidad'),adminSemana=$('adminSemana'),adminTexto=$('adminTexto'),adminContenidoLista=$('adminContenidoLista'),trabajosContainer=$('trabajosContainer'),unidadesContainer=$('unidadesContainer'),totalTrabajos=$('totalTrabajos'),emptyMessage=$('emptyMessage'),buscar=$('buscar'),filtroCategoria=$('filtroCategoria'),filtroUnidad=$('filtroUnidad'),filtroSemana=$('filtroSemana'),limpiarFiltros=$('limpiarFiltros'),btnVerTareas=$('btnVerTareas'),btnMiPerfil=$('btnMiPerfil');
 const usuarioCorrecto='P01898G@upla.edu.pe',passwordCorrecto='joseespinal_2003',adminCorrecto='admin@campus.com',passwordAdminCorrecto='admin_2003';
 
-const SUPABASE_URL='https://haozrksoocumwgssbigi.supabase.co';
-const SUPABASE_KEY='sb_publishable_eqeBfmieF0MHYMtIXxrYwg_DUhGE9UJ';
+const SUPABASE_URL='https://uxaxkbadbuugteinbepc.supabase.co';
+const SUPABASE_KEY='sb_publishable_IGQGQSn8uL21h6XiHV3jOQ_Jbe42vZR';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let trabajos=[];
-let textosSemanas={};
+let textosSemanas=JSON.parse(localStorage.getItem('textosSemanasCampus'))||{};
 
 async function cargarTrabajos(){
   const {data,error}=await sb.from('trabajos').select('*').order('fecha',{ascending:false});
   if(error){console.error('Error al cargar trabajos:',error);return;}
   trabajos=data||[];
-}
-
-async function cargarTextos(){
-  const {data,error}=await sb.from('textos_semanas').select('*');
-  if(error){console.error('Error al cargar textos de semanas:',error);return;}
-  textosSemanas={};
-  (data||[]).forEach(t=>{textosSemanas[clave(t.unidad,t.semana)]=t.texto});
+  renderizarTodo();
 }
 
 function semanaGlobal(u,s){return(Number(u)-1)*4+Number(s)}
 function clave(u,s){return`unidad_${u}_semana_${s}`}
 function textoSemana(u,s){return textosSemanas[clave(u,s)]||''}
-async function mostrarApp(){
-  loginPage.classList.add('hidden');adminLoginPage.classList.add('hidden');adminPage.classList.add('hidden');appPage.classList.remove('hidden');
-  await Promise.all([cargarTrabajos(),cargarTextos()]);
-  renderizarTodo();
-}
+function guardarTextos(){localStorage.setItem('textosSemanasCampus',JSON.stringify(textosSemanas))}
+function mostrarApp(){loginPage.classList.add('hidden');adminLoginPage.classList.add('hidden');adminPage.classList.add('hidden');appPage.classList.remove('hidden');cargarTrabajos()}
 function mostrarLogin(){appPage.classList.add('hidden');adminLoginPage.classList.add('hidden');adminPage.classList.add('hidden');loginPage.classList.remove('hidden')}
 loginForm.addEventListener('submit',e=>{e.preventDefault();let c=$('correo').value.trim(),p=$('password').value.trim();if(c===usuarioCorrecto&&p===passwordCorrecto){localStorage.setItem('usuarioCampusHTML',c);mostrarApp()}else alert('Correo o contraseña incorrectos. Inténtalo nuevamente.')});
-btnSalir.onclick=()=>{localStorage.removeItem('usuarioCampusHTML');mostrarLogin()};btnAdmin.onclick=()=>{appPage.classList.add('hidden');adminLoginPage.classList.remove('hidden')};btnCancelarAdmin.onclick=()=>{adminLoginPage.classList.add('hidden');appPage.classList.remove('hidden')};btnVolver.onclick=async()=>{adminPage.classList.add('hidden');appPage.classList.remove('hidden');await Promise.all([cargarTrabajos(),cargarTextos()]);renderizarTodo()};btnVerTareas.onclick=()=>document.querySelector('.works-section').scrollIntoView({behavior:'smooth'});btnMiPerfil.onclick=()=>document.querySelector('#perfilSection').scrollIntoView({behavior:'smooth'});
-adminLoginForm.addEventListener('submit',async e=>{e.preventDefault();if(adminUsuario.value.trim()===adminCorrecto&&adminPassword.value.trim()===passwordAdminCorrecto){adminLoginPage.classList.add('hidden');adminPage.classList.remove('hidden');adminUsuario.value='';adminPassword.value='';await cargarTextos();renderizarPanelAdmin()}else alert('Usuario o contraseña de admin incorrectos.')});
+btnSalir.onclick=()=>{localStorage.removeItem('usuarioCampusHTML');mostrarLogin()};btnAdmin.onclick=()=>{appPage.classList.add('hidden');adminLoginPage.classList.remove('hidden')};btnCancelarAdmin.onclick=()=>{adminLoginPage.classList.add('hidden');appPage.classList.remove('hidden')};btnVolver.onclick=()=>{adminPage.classList.add('hidden');appPage.classList.remove('hidden');cargarTrabajos()};btnVerTareas.onclick=()=>document.querySelector('.works-section').scrollIntoView({behavior:'smooth'});btnMiPerfil.onclick=()=>document.querySelector('#perfilSection').scrollIntoView({behavior:'smooth'});
+adminLoginForm.addEventListener('submit',e=>{e.preventDefault();if(adminUsuario.value.trim()===adminCorrecto&&adminPassword.value.trim()===passwordAdminCorrecto){adminLoginPage.classList.add('hidden');adminPage.classList.remove('hidden');adminUsuario.value='';adminPassword.value='';renderizarPanelAdmin()}else alert('Usuario o contraseña de admin incorrectos.')});
 
 trabajoForm.addEventListener('submit',async e=>{
   e.preventDefault();
@@ -84,26 +75,7 @@ trabajoForm.addEventListener('submit',async e=>{
   alert('Trabajo guardado correctamente. Ya es visible para todos.');
 });
 
-adminForm.addEventListener('submit',async e=>{
-  e.preventDefault();
-  const btn=adminForm.querySelector('button[type="submit"]');
-  const textoOriginal=btn.textContent;
-  btn.disabled=true;btn.textContent='Guardando...';
-
-  let u=Number(adminUnidad.value),s=Number(adminSemana.value),texto=adminTexto.value.trim();
-
-  const {error}=await sb.from('textos_semanas').upsert({unidad:u,semana:s,texto},{onConflict:'unidad,semana'});
-
-  btn.disabled=false;btn.textContent=textoOriginal;
-
-  if(error){alert('Error al guardar el texto: '+error.message);return;}
-
-  textosSemanas[clave(u,s)]=texto;
-  renderizarPanelAdmin();
-  renderizarUnidades();
-  renderizarTrabajos();
-  alert('Texto guardado correctamente. Ya es visible para todos.');
-});
+adminForm.addEventListener('submit',e=>{e.preventDefault();let u=Number(adminUnidad.value),s=Number(adminSemana.value);textosSemanas[clave(u,s)]=adminTexto.value.trim();guardarTextos();renderizarPanelAdmin();renderizarUnidades();alert('Texto guardado correctamente.')});
 
 function filtrados(){let tx=buscar.value.toLowerCase(),cat=filtroCategoria.value,u=filtroUnidad.value,s=filtroSemana.value;return trabajos.filter(t=>`${t.titulo} ${t.curso} ${t.descripcion} ${t.autor}`.toLowerCase().includes(tx)&&(cat==='Todos'||t.categoria===cat)&&(u==='Todas'||Number(t.unidad)===Number(u))&&(s==='Todas'||Number(t.semana)===Number(s)))}
 
@@ -148,4 +120,4 @@ function verTrabajo(id){
 
 buscar.oninput=renderizarTrabajos;filtroCategoria.onchange=renderizarTrabajos;filtroUnidad.onchange=renderizarTrabajos;filtroSemana.onchange=renderizarTrabajos;limpiarFiltros.onclick=()=>{buscar.value='';filtroCategoria.value='Todos';filtroUnidad.value='Todas';filtroSemana.value='Todas';renderizarTrabajos()};
 
-localStorage.getItem('usuarioCampusHTML')?mostrarApp():mostrarLogin();
+mostrarApp();
