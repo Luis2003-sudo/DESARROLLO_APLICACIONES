@@ -54,7 +54,6 @@ trabajoForm.addEventListener('submit',async e=>{
   const {data:insertado,error}=await sb.from('trabajos').insert({
     titulo:$('titulo').value,
     curso:$('curso').value,
-    categoria:$('categoria').value,
     unidad:Number($('unidad').value),
     semana:Number($('semana').value),
     descripcion:$('descripcion').value||'Sin descripción.',
@@ -91,7 +90,7 @@ function renderizarTrabajos(){
     let fechaCorta=t.fecha?String(t.fecha).slice(0,10):'';
     let card=document.createElement('article');
     card.className='work-card';
-    card.innerHTML=`<div class="work-top"><div class="file-icon">📄</div><span class="category">${t.categoria}</span></div><h3>${t.titulo}</h3><p>📘 ${t.curso}</p><p>📚 Unidad ${t.unidad} - Semana ${sg}</p><p>👤 ${t.autor}</p><p>🗓️ ${fechaCorta}</p>${txt?`<p class="week-content-card">📝 ${txt}</p>`:''}<p class="description">${t.descripcion}</p><div class="file-name">🏷️ ${t.archivo_nombre||'Sin archivo adjunto'}</div><div class="work-actions"><button class="btn-light" onclick="verTrabajo(${t.id})">Ver</button><button class="btn-danger" onclick="eliminarTrabajo(${t.id})">Eliminar</button></div>`;
+    card.innerHTML=`<div class="work-top"><div class="file-icon">📄</div></div><h3>${t.titulo}</h3><p>📘 ${t.curso}</p><p>📚 Unidad ${t.unidad} - Semana ${sg}</p><p>👤 ${t.autor}</p><p>🗓️ ${fechaCorta}</p>${txt?`<p class="week-content-card">📝 ${txt}</p>`:''}<p class="description">${t.descripcion}</p><div class="file-name">🏷️ ${t.archivo_nombre||'Sin archivo adjunto'}</div><div class="work-actions"><button class="btn-light" onclick="verTrabajo(${t.id})">Ver</button><button class="btn-danger" onclick="eliminarTrabajo(${t.id})">Eliminar</button></div>`;
     trabajosContainer.appendChild(card)
   })
 }
