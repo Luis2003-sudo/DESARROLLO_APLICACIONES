@@ -51,6 +51,8 @@ trabajoForm.addEventListener('submit',async e=>{
     archivo_url=urlData.publicUrl;
   }
 
+  const enlace=$('enlace').value.trim()||null;
+
   const {data:insertado,error}=await sb.from('trabajos').insert({
     titulo:$('titulo').value,
     curso:$('curso').value,
@@ -59,7 +61,8 @@ trabajoForm.addEventListener('submit',async e=>{
     descripcion:$('descripcion').value||'Sin descripción.',
     autor:$('autor').value||'Estudiante',
     archivo_nombre,
-    archivo_url
+    archivo_url,
+    enlace
   }).select();
 
   btn.disabled=false;btn.textContent=textoOriginal;
@@ -90,7 +93,7 @@ function renderizarTrabajos(){
     let fechaCorta=t.fecha?String(t.fecha).slice(0,10):'';
     let card=document.createElement('article');
     card.className='work-card';
-    card.innerHTML=`<div class="work-top"><div class="file-icon">📄</div></div><h3>${t.titulo}</h3><p>📘 ${t.curso}</p><p>📚 Unidad ${t.unidad} - Semana ${sg}</p><p>👤 ${t.autor}</p><p>🗓️ ${fechaCorta}</p>${txt?`<p class="week-content-card">📝 ${txt}</p>`:''}<p class="description">${t.descripcion}</p><div class="file-name">🏷️ ${t.archivo_nombre||'Sin archivo adjunto'}</div><div class="work-actions"><button class="btn-light" onclick="verTrabajo(${t.id})">Ver</button><button class="btn-danger" onclick="eliminarTrabajo(${t.id})">Eliminar</button></div>`;
+    card.innerHTML=`<div class="work-top"><div class="file-icon">📄</div></div><h3>${t.titulo}</h3><p>📘 ${t.curso}</p><p>📚 Unidad ${t.unidad} - Semana ${sg}</p><p>👤 ${t.autor}</p><p>🗓️ ${fechaCorta}</p>${txt?`<p class="week-content-card">📝 ${txt}</p>`:''}<p class="description">${t.descripcion}</p><div class="file-name">🏷️ ${t.archivo_nombre||'Sin archivo adjunto'}</div><div class="work-actions"><button class="btn-light" onclick="verTrabajo(${t.id})">Ver</button>${t.enlace?`<button class="btn-light" onclick="verEnlace(${t.id})">🔗 Enlace</button>`:''}<button class="btn-danger" onclick="eliminarTrabajo(${t.id})">Eliminar</button></div>`;
     trabajosContainer.appendChild(card)
   })
 }
@@ -117,6 +120,12 @@ function verTrabajo(id){
   const t=trabajos.find(x=>x.id===id);
   if(!t||!t.archivo_url){alert('Este trabajo no tiene un archivo adjunto.');return}
   window.open(t.archivo_url,'_blank')
+}
+
+function verEnlace(id){
+  const t=trabajos.find(x=>x.id===id);
+  if(!t||!t.enlace){alert('Este trabajo no tiene enlace.');return}
+  window.open(t.enlace,'_blank')
 }
 
 buscar.oninput=renderizarTrabajos;filtroUnidad.onchange=renderizarTrabajos;filtroSemana.onchange=renderizarTrabajos;limpiarFiltros.onclick=()=>{buscar.value='';filtroUnidad.value='Todas';filtroSemana.value='Todas';renderizarTrabajos()};
