@@ -1,9 +1,12 @@
 const $=id=>document.getElementById(id);
-const appPage=$('appPage'),trabajoForm=$('trabajoForm'),btnAdmin=$('btnAdmin'),adminLoginPage=$('adminLoginPage'),adminLoginForm=$('adminLoginForm'),adminUsuario=$('adminUsuario'),adminPassword=$('adminPassword'),btnCancelarAdmin=$('btnCancelarAdmin'),adminPage=$('adminPage'),btnVolver=$('btnVolver'),adminForm=$('adminForm'),adminUnidad=$('adminUnidad'),adminSemana=$('adminSemana'),adminTexto=$('adminTexto'),adminContenidoLista=$('adminContenidoLista'),trabajosContainer=$('trabajosContainer'),unidadesContainer=$('unidadesContainer'),totalTrabajos=$('totalTrabajos'),emptyMessage=$('emptyMessage'),buscar=$('buscar'),filtroUnidad=$('filtroUnidad'),filtroSemana=$('filtroSemana'),limpiarFiltros=$('limpiarFiltros'),btnVerTareas=$('btnVerTareas'),btnMiPerfil=$('btnMiPerfil');
+const appPage=$('appPage'),trabajoForm=$('trabajoForm'),btnAdmin=$('btnAdmin'),adminLoginPage=$('adminLoginPage'),adminLoginForm=$('adminLoginForm'),adminUsuario=$('adminUsuario'),adminPassword=$('adminPassword'),btnCancelarAdmin=$('btnCancelarAdmin'),adminPage=$('adminPage'),btnVolver=$('btnVolver'),adminForm=$('adminForm'),adminUnidad=$('adminUnidad'),adminSemana=$('adminSemana'),adminTexto=$('adminTexto'),adminContenidoLista=$('adminContenidoLista'),trabajosContainer=$('trabajosContainer'),unidadesContainer=$('unidadesContainer'),totalTrabajos=$('totalTrabajos'),emptyMessage=$('emptyMessage'),buscar=$('buscar'),filtroUnidad=$('filtroUnidad'),filtroSemana=$('filtroSemana'),limpiarFiltros=$('limpiarFiltros'),btnVerTareas=$('btnVerTareas'),btnMiPerfil=$('btnMiPerfil'),enlacesContainer=$('enlacesContainer'),btnAgregarEnlace=$('btnAgregarEnlace'),modalAdjuntos=$('modalAdjuntos'),modalTitulo=$('modalTitulo'),modalSubtitulo=$('modalSubtitulo'),modalLista=$('modalLista'),btnCerrarModal=$('btnCerrarModal');
 const adminCorrecto='admin@campus.com',passwordAdminCorrecto='admin_2003';
 
-const SUPABASE_URL='https://uxaxkbadbuugteinbepc.supabase.co';
-const SUPABASE_KEY='sb_publishable_IGQGQSn8uL21h6XiHV3jOQ_Jbe42vZR';
+// ⚠️ Proyecto: DESARROLLO_APLICACIONES
+// Reemplaza SUPABASE_KEY con tu clave "anon public" / "publishable key"
+// (Project Settings > API Keys en el panel de Supabase)
+const SUPABASE_URL='https://moanobzutufwhucxiurm.supabase.co';
+const SUPABASE_KEY='PEGA_AQUI_TU_ANON_KEY';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let trabajos=[];
@@ -25,6 +28,32 @@ function mostrarApp(){adminLoginPage.classList.add('hidden');adminPage.classList
 
 mostrarApp();
 
+// ---- Enlaces dinámicos en el formulario de admin ----
+function agregarFilaEnlace(nombre='',url=''){
+  const row=document.createElement('div');
+  row.className='enlace-row';
+  const inputNombre=document.createElement('input');
+  inputNombre.placeholder='Nombre del enlace';
+  inputNombre.className='enlace-nombre';
+  inputNombre.value=nombre;
+  const inputUrl=document.createElement('input');
+  inputUrl.type='url';
+  inputUrl.placeholder='https://...';
+  inputUrl.className='enlace-url';
+  inputUrl.value=url;
+  const btnQuitar=document.createElement('button');
+  btnQuitar.type='button';
+  btnQuitar.className='btn-quitar-enlace';
+  btnQuitar.textContent='✕';
+  btnQuitar.onclick=()=>row.remove();
+  row.appendChild(inputNombre);
+  row.appendChild(inputUrl);
+  row.appendChild(btnQuitar);
+  enlacesContainer.appendChild(row);
+}
+btnAgregarEnlace.onclick=()=>agregarFilaEnlace();
+agregarFilaEnlace();
+
 btnAdmin.onclick=()=>{appPage.classList.add('hidden');adminLoginPage.classList.remove('hidden')};btnCancelarAdmin.onclick=()=>{adminLoginPage.classList.add('hidden');appPage.classList.remove('hidden')};btnVolver.onclick=()=>{adminPage.classList.add('hidden');appPage.classList.remove('hidden');cargarTrabajos()};btnVerTareas.onclick=()=>document.querySelector('.works-section').scrollIntoView({behavior:'smooth'});btnMiPerfil.onclick=()=>document.querySelector('#perfilSection').scrollIntoView({behavior:'smooth'});
 adminLoginForm.addEventListener('submit',e=>{e.preventDefault();if(adminUsuario.value.trim()===adminCorrecto&&adminPassword.value.trim()===passwordAdminCorrecto){adminLoginPage.classList.add('hidden');adminPage.classList.remove('hidden');adminUsuario.value='';adminPassword.value='';renderizarPanelAdmin()}else alert('Usuario o contraseña de admin incorrectos.')});
 
@@ -34,24 +63,28 @@ trabajoForm.addEventListener('submit',async e=>{
   const textoOriginal=btn.textContent;
   btn.disabled=true;btn.textContent='Guardando...';
 
-  let archivo_nombre=null,archivo_url=null;
-  const a=$('archivo');
-  if(a.files.length){
-    const file=a.files[0];
+  const adjuntos=[];
+
+  const inputArchivos=$('archivos');
+  for(const file of inputArchivos.files){
     const nombreLimpio=file.name.replace(/[^a-zA-Z0-9.\-_]/g,'_');
     const ruta=`${Date.now()}_${nombreLimpio}`;
     const {error:errorSubida}=await sb.storage.from('trabajos').upload(ruta,file);
     if(errorSubida){
-      alert('Error al subir el archivo: '+errorSubida.message);
+      alert('Error al subir "'+file.name+'": '+errorSubida.message);
       btn.disabled=false;btn.textContent=textoOriginal;
       return;
     }
     const {data:urlData}=sb.storage.from('trabajos').getPublicUrl(ruta);
-    archivo_nombre=file.name;
-    archivo_url=urlData.publicUrl;
+    adjuntos.push({tipo:'archivo',nombre:file.name,url:urlData.publicUrl});
   }
 
-  const enlace=$('enlace').value.trim()||null;
+  document.querySelectorAll('#enlacesContainer .enlace-row').forEach(row=>{
+    const url=row.querySelector('.enlace-url').value.trim();
+    if(!url)return;
+    const nombre=row.querySelector('.enlace-nombre').value.trim()||url;
+    adjuntos.push({tipo:'enlace',nombre,url});
+  });
 
   const {data:insertado,error}=await sb.from('trabajos').insert({
     titulo:$('titulo').value,
@@ -60,9 +93,7 @@ trabajoForm.addEventListener('submit',async e=>{
     semana:Number($('semana').value),
     descripcion:$('descripcion').value||'Sin descripción.',
     autor:$('autor').value||'Estudiante',
-    archivo_nombre,
-    archivo_url,
-    enlace
+    adjuntos
   }).select();
 
   btn.disabled=false;btn.textContent=textoOriginal;
@@ -76,6 +107,8 @@ trabajoForm.addEventListener('submit',async e=>{
 
   trabajoForm.reset();
   $('autor').value='JOSE LUIS ESPINAL HUAMAN';
+  enlacesContainer.innerHTML='';
+  agregarFilaEnlace();
   alert('Trabajo guardado correctamente. Ya es visible para todos.');
 });
 
@@ -91,12 +124,47 @@ function renderizarTrabajos(){
   arr.forEach(t=>{
     let sg=semanaGlobal(t.unidad,t.semana),txt=textoSemana(t.unidad,t.semana);
     let fechaCorta=t.fecha?String(t.fecha).slice(0,10):'';
+    let nAdj=(t.adjuntos||[]).length;
+    let etiquetaAdj=nAdj===0?'Sin archivos ni enlaces':`${nAdj} adjunto${nAdj===1?'':'s'}`;
     let card=document.createElement('article');
     card.className='work-card';
-    card.innerHTML=`<div class="work-top"><div class="file-icon">📄</div></div><h3>${t.titulo}</h3><p>📘 ${t.curso}</p><p>📚 Unidad ${t.unidad} - Semana ${sg}</p><p>👤 ${t.autor}</p><p>🗓️ ${fechaCorta}</p>${txt?`<p class="week-content-card">📝 ${txt}</p>`:''}<p class="description">${t.descripcion}</p><div class="file-name">🏷️ ${t.archivo_nombre||'Sin archivo adjunto'}</div><div class="work-actions"><button class="btn-light" onclick="verTrabajo(${t.id})">Ver</button>${t.enlace?`<button class="btn-light" onclick="verEnlace(${t.id})">🔗 Enlace</button>`:''}<button class="btn-danger" onclick="eliminarTrabajo(${t.id})">Eliminar</button></div>`;
+    card.innerHTML=`<div class="work-top"><div class="file-icon">📄</div></div><h3>${t.titulo}</h3><p>📘 ${t.curso}</p><p>📚 Unidad ${t.unidad} - Semana ${sg}</p><p>👤 ${t.autor}</p><p>🗓️ ${fechaCorta}</p>${txt?`<p class="week-content-card">📝 ${txt}</p>`:''}<p class="description">${t.descripcion}</p><div class="file-name">🏷️ ${etiquetaAdj}</div><div class="work-actions"><button class="btn-light" onclick="verAdjuntos(${t.id})">Ver</button><button class="btn-danger" onclick="eliminarTrabajo(${t.id})">Eliminar</button></div>`;
     trabajosContainer.appendChild(card)
   })
 }
+
+function verAdjuntos(id){
+  const t=trabajos.find(x=>x.id===id);
+  if(!t)return;
+  const sg=semanaGlobal(t.unidad,t.semana);
+  modalTitulo.textContent=t.titulo;
+  modalSubtitulo.textContent=`${t.curso} · Unidad ${t.unidad} - Semana ${sg}`;
+  modalLista.innerHTML='';
+  const adjuntos=t.adjuntos||[];
+  if(!adjuntos.length){
+    const vacio=document.createElement('p');
+    vacio.style.color='#9aa4c7';
+    vacio.textContent='Este trabajo no tiene archivos ni enlaces adjuntos.';
+    modalLista.appendChild(vacio);
+  }else{
+    adjuntos.forEach(a=>{
+      const row=document.createElement('div');
+      row.className='modal-item';
+      const icono=a.tipo==='enlace'?'🔗':'📎';
+      const span=document.createElement('span');
+      span.textContent=`${icono} ${a.nombre}`;
+      const btn=document.createElement('button');
+      btn.textContent='Ver';
+      btn.onclick=()=>window.open(a.url,'_blank');
+      row.appendChild(span);
+      row.appendChild(btn);
+      modalLista.appendChild(row);
+    });
+  }
+  modalAdjuntos.classList.remove('hidden');
+}
+btnCerrarModal.onclick=()=>modalAdjuntos.classList.add('hidden');
+modalAdjuntos.addEventListener('click',e=>{if(e.target===modalAdjuntos)modalAdjuntos.classList.add('hidden')});
 
 function renderizarUnidades(){unidadesContainer.innerHTML='';for(let u=1;u<=4;u++){let total=trabajos.filter(t=>Number(t.unidad)===u).length,html='';for(let s=1;s<=4;s++){let sg=semanaGlobal(u,s),cant=trabajos.filter(t=>Number(t.unidad)===u&&Number(t.semana)===s).length,txt=textoSemana(u,s),res=txt?txt.substring(0,45)+(txt.length>45?'...':''):'Sin texto';html+=`<button class="week-btn" onclick="filtrarPorSemana(${u},${s})"><span class="week-title">Semana ${sg}</span><strong>${cant}</strong><small>${res}</small></button>`}let div=document.createElement('div');div.className='unit-card';div.innerHTML=`<div class="unit-head"><h3>Unidad ${u}</h3><span>${total} trabajos</span></div><div class="weeks-grid">${html}</div>`;unidadesContainer.appendChild(div)}}
 
@@ -104,7 +172,7 @@ function renderizarPanelAdmin(){adminContenidoLista.innerHTML='';for(let u=1;u<=
 
 function editarTextoSemana(u,s){adminUnidad.value=String(u);adminSemana.value=String(s);adminTexto.value=textoSemana(u,s);adminTexto.focus()}
 
-function renderizarTodo(){totalTrabajos.textContent=trabajos.length;renderizarUnidades();renderizarTrabajos()}
+function renderizarTodo(){if(totalTrabajos)totalTrabajos.textContent=trabajos.length;renderizarUnidades();renderizarTrabajos()}
 
 async function eliminarTrabajo(id){
   if(!confirm('¿Seguro que quieres eliminar este trabajo? Esta acción no se puede deshacer.'))return;
@@ -115,17 +183,5 @@ async function eliminarTrabajo(id){
 }
 
 function filtrarPorSemana(u,s){filtroUnidad.value=String(u);filtroSemana.value=String(s);renderizarTrabajos();document.querySelector('.works-section').scrollIntoView({behavior:'smooth'})}
-
-function verTrabajo(id){
-  const t=trabajos.find(x=>x.id===id);
-  if(!t||!t.archivo_url){alert('Este trabajo no tiene un archivo adjunto.');return}
-  window.open(t.archivo_url,'_blank')
-}
-
-function verEnlace(id){
-  const t=trabajos.find(x=>x.id===id);
-  if(!t||!t.enlace){alert('Este trabajo no tiene enlace.');return}
-  window.open(t.enlace,'_blank')
-}
 
 buscar.oninput=renderizarTrabajos;filtroUnidad.onchange=renderizarTrabajos;filtroSemana.onchange=renderizarTrabajos;limpiarFiltros.onclick=()=>{buscar.value='';filtroUnidad.value='Todas';filtroSemana.value='Todas';renderizarTrabajos()};
