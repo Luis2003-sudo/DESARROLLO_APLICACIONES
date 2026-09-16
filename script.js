@@ -1,5 +1,5 @@
 const $=id=>document.getElementById(id);
-const appPage=$('appPage'),trabajoForm=$('trabajoForm'),btnAdmin=$('btnAdmin'),adminLoginPage=$('adminLoginPage'),adminLoginForm=$('adminLoginForm'),adminUsuario=$('adminUsuario'),adminPassword=$('adminPassword'),btnCancelarAdmin=$('btnCancelarAdmin'),adminPage=$('adminPage'),btnVolver=$('btnVolver'),adminForm=$('adminForm'),adminUnidad=$('adminUnidad'),adminSemana=$('adminSemana'),adminTexto=$('adminTexto'),adminContenidoLista=$('adminContenidoLista'),trabajosContainer=$('trabajosContainer'),unidadesContainer=$('unidadesContainer'),totalTrabajos=$('totalTrabajos'),emptyMessage=$('emptyMessage'),buscar=$('buscar'),filtroUnidad=$('filtroUnidad'),filtroSemana=$('filtroSemana'),limpiarFiltros=$('limpiarFiltros'),btnVerTareas=$('btnVerTareas'),btnMiPerfil=$('btnMiPerfil'),enlacesContainer=$('enlacesContainer'),btnAgregarEnlace=$('btnAgregarEnlace'),modalAdjuntos=$('modalAdjuntos'),modalTitulo=$('modalTitulo'),modalSubtitulo=$('modalSubtitulo'),modalLista=$('modalLista'),btnCerrarModal=$('btnCerrarModal');
+const appPage=$('appPage'),trabajoForm=$('trabajoForm'),btnAdmin=$('btnAdmin'),adminLoginPage=$('adminLoginPage'),adminLoginForm=$('adminLoginForm'),adminUsuario=$('adminUsuario'),adminPassword=$('adminPassword'),btnCancelarAdmin=$('btnCancelarAdmin'),adminPage=$('adminPage'),btnVolver=$('btnVolver'),adminForm=$('adminForm'),adminUnidad=$('adminUnidad'),adminSemana=$('adminSemana'),adminTexto=$('adminTexto'),adminContenidoLista=$('adminContenidoLista'),trabajosContainer=$('trabajosContainer'),unidadesContainer=$('unidadesContainer'),totalTrabajos=$('totalTrabajos'),emptyMessage=$('emptyMessage'),buscar=$('buscar'),filtroUnidad=$('filtroUnidad'),filtroSemana=$('filtroSemana'),limpiarFiltros=$('limpiarFiltros'),btnVerTareas=$('btnVerTareas'),btnMiPerfil=$('btnMiPerfil'),enlacesContainer=$('enlacesContainer'),btnAgregarEnlace=$('btnAgregarEnlace'),modalAdjuntos=$('modalAdjuntos'),modalTitulo=$('modalTitulo'),modalSubtitulo=$('modalSubtitulo'),modalLista=$('modalLista'),btnCerrarModal=$('btnCerrarModal'),modalArchivos=$('modalArchivos'),modalEnlacesContainer=$('modalEnlacesContainer'),modalBtnAgregarEnlace=$('modalBtnAgregarEnlace'),modalBtnGuardarMas=$('modalBtnGuardarMas');
 const adminCorrecto='admin@campus.com',passwordAdminCorrecto='admin_2003';
 
 const SUPABASE_URL='https://moanobzutufwhucxiurm.supabase.co';
@@ -7,6 +7,7 @@ const SUPABASE_KEY='sb_publishable_qeneiL045GECbtOIFWhslA_p7qE8GMY';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let trabajos=[];
+let trabajoActualId=null;
 let textosSemanas=JSON.parse(localStorage.getItem('textosSemanasCampus'))||{};
 
 async function cargarTrabajos(){
@@ -25,7 +26,7 @@ function mostrarApp(){adminLoginPage.classList.add('hidden');adminPage.classList
 
 mostrarApp();
 
-function agregarFilaEnlace(nombre='',url=''){
+function agregarFilaEnlace(container,nombre='',url=''){
   const row=document.createElement('div');
   row.className='enlace-row';
   const inputNombre=document.createElement('input');
@@ -45,10 +46,11 @@ function agregarFilaEnlace(nombre='',url=''){
   row.appendChild(inputNombre);
   row.appendChild(inputUrl);
   row.appendChild(btnQuitar);
-  enlacesContainer.appendChild(row);
+  container.appendChild(row);
 }
-btnAgregarEnlace.onclick=()=>agregarFilaEnlace();
-agregarFilaEnlace();
+btnAgregarEnlace.onclick=()=>agregarFilaEnlace(enlacesContainer);
+agregarFilaEnlace(enlacesContainer);
+modalBtnAgregarEnlace.onclick=()=>agregarFilaEnlace(modalEnlacesContainer);
 
 btnAdmin.onclick=()=>{appPage.classList.add('hidden');adminLoginPage.classList.remove('hidden')};btnCancelarAdmin.onclick=()=>{adminLoginPage.classList.add('hidden');appPage.classList.remove('hidden')};btnVolver.onclick=()=>{adminPage.classList.add('hidden');appPage.classList.remove('hidden');cargarTrabajos()};btnVerTareas.onclick=()=>document.querySelector('.works-section').scrollIntoView({behavior:'smooth'});btnMiPerfil.onclick=()=>document.querySelector('#perfilSection').scrollIntoView({behavior:'smooth'});
 adminLoginForm.addEventListener('submit',e=>{e.preventDefault();if(adminUsuario.value.trim()===adminCorrecto&&adminPassword.value.trim()===passwordAdminCorrecto){adminLoginPage.classList.add('hidden');adminPage.classList.remove('hidden');adminUsuario.value='';adminPassword.value='';renderizarPanelAdmin()}else alert('Usuario o contraseña de admin incorrectos.')});
@@ -104,7 +106,7 @@ trabajoForm.addEventListener('submit',async e=>{
   trabajoForm.reset();
   $('autor').value='JOSE LUIS ESPINAL HUAMAN';
   enlacesContainer.innerHTML='';
-  agregarFilaEnlace();
+  agregarFilaEnlace(enlacesContainer);
   alert('Trabajo guardado correctamente. Ya es visible para todos.');
 });
 
@@ -132,6 +134,7 @@ function renderizarTrabajos(){
 function verAdjuntos(id){
   const t=trabajos.find(x=>x.id===id);
   if(!t)return;
+  trabajoActualId=id;
   const sg=semanaGlobal(t.unidad,t.semana);
   modalTitulo.textContent=t.titulo;
   modalSubtitulo.textContent=`${t.curso} · Unidad ${t.unidad} - Semana ${sg}`;
@@ -149,6 +152,7 @@ function verAdjuntos(id){
       const icono=a.tipo==='enlace'?'🔗':'📎';
       const span=document.createElement('span');
       span.textContent=`${icono} ${a.nombre}`;
+      span.title=a.nombre;
       const btn=document.createElement('button');
       btn.textContent='Ver';
       btn.onclick=()=>window.open(a.url,'_blank');
@@ -157,10 +161,64 @@ function verAdjuntos(id){
       modalLista.appendChild(row);
     });
   }
+  modalEnlacesContainer.innerHTML='';
+  agregarFilaEnlace(modalEnlacesContainer);
+  modalArchivos.value='';
   modalAdjuntos.classList.remove('hidden');
 }
-btnCerrarModal.onclick=()=>modalAdjuntos.classList.add('hidden');
-modalAdjuntos.addEventListener('click',e=>{if(e.target===modalAdjuntos)modalAdjuntos.classList.add('hidden')});
+
+modalBtnGuardarMas.onclick=async()=>{
+  if(trabajoActualId==null)return;
+  const t=trabajos.find(x=>x.id===trabajoActualId);
+  if(!t)return;
+
+  const btn=modalBtnGuardarMas;
+  const textoOriginal=btn.textContent;
+  btn.disabled=true;btn.textContent='Agregando...';
+
+  const nuevosAdjuntos=[];
+
+  for(const file of modalArchivos.files){
+    const nombreLimpio=file.name.replace(/[^a-zA-Z0-9.\-_]/g,'_');
+    const ruta=`${Date.now()}_${nombreLimpio}`;
+    const {error:errorSubida}=await sb.storage.from('trabajos').upload(ruta,file);
+    if(errorSubida){
+      alert('Error al subir "'+file.name+'": '+errorSubida.message);
+      btn.disabled=false;btn.textContent=textoOriginal;
+      return;
+    }
+    const {data:urlData}=sb.storage.from('trabajos').getPublicUrl(ruta);
+    nuevosAdjuntos.push({tipo:'archivo',nombre:file.name,url:urlData.publicUrl});
+  }
+
+  modalEnlacesContainer.querySelectorAll('.enlace-row').forEach(row=>{
+    const url=row.querySelector('.enlace-url').value.trim();
+    if(!url)return;
+    const nombre=row.querySelector('.enlace-nombre').value.trim()||url;
+    nuevosAdjuntos.push({tipo:'enlace',nombre,url});
+  });
+
+  if(!nuevosAdjuntos.length){
+    alert('Agrega al menos un archivo o un enlace.');
+    btn.disabled=false;btn.textContent=textoOriginal;
+    return;
+  }
+
+  const adjuntosActualizados=[...(t.adjuntos||[]),...nuevosAdjuntos];
+  const {error}=await sb.from('trabajos').update({adjuntos:adjuntosActualizados}).eq('id',trabajoActualId);
+
+  btn.disabled=false;btn.textContent=textoOriginal;
+
+  if(error){alert('Error al agregar: '+error.message);return;}
+
+  t.adjuntos=adjuntosActualizados;
+  renderizarTrabajos();
+  verAdjuntos(trabajoActualId);
+  alert('Se agregó correctamente a este trabajo.');
+};
+
+btnCerrarModal.onclick=()=>{modalAdjuntos.classList.add('hidden');trabajoActualId=null};
+modalAdjuntos.addEventListener('click',e=>{if(e.target===modalAdjuntos){modalAdjuntos.classList.add('hidden');trabajoActualId=null}});
 
 function renderizarUnidades(){unidadesContainer.innerHTML='';for(let u=1;u<=4;u++){let total=trabajos.filter(t=>Number(t.unidad)===u).length,html='';for(let s=1;s<=4;s++){let sg=semanaGlobal(u,s),cant=trabajos.filter(t=>Number(t.unidad)===u&&Number(t.semana)===s).length,txt=textoSemana(u,s),res=txt?txt.substring(0,45)+(txt.length>45?'...':''):'Sin texto';html+=`<button class="week-btn" onclick="filtrarPorSemana(${u},${s})"><span class="week-title">Semana ${sg}</span><strong>${cant}</strong><small>${res}</small></button>`}let div=document.createElement('div');div.className='unit-card';div.innerHTML=`<div class="unit-head"><h3>Unidad ${u}</h3><span>${total} trabajos</span></div><div class="weeks-grid">${html}</div>`;unidadesContainer.appendChild(div)}}
 
