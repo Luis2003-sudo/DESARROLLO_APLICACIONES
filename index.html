@@ -14,14 +14,20 @@
 
     .modal-overlay{position:fixed;inset:0;background:rgba(5,8,20,0.72);display:flex;align-items:center;justify-content:center;z-index:1000}
     .modal-overlay.hidden{display:none}
-    .modal-box{background:#111b3d;border-radius:16px;padding:28px;max-width:520px;width:90%;max-height:80vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+    .modal-box{background:#111b3d;border-radius:16px;padding:28px;max-width:520px;width:90%;max-height:85vh;overflow-y:auto;overflow-x:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
     .modal-box h2{margin:0 0 4px;color:#fff;font-size:1.3rem}
     .modal-box p{margin:0 0 20px;color:#9aa4c7}
     .modal-lista{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
-    .modal-item{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#1a2550;border-radius:12px;padding:12px 16px;color:#e6e9f5}
-    .modal-item span{font-size:0.92rem}
-    .modal-item button{background:#4c63f7;color:#fff;border:none;border-radius:8px;padding:8px 18px;cursor:pointer;font-weight:600;white-space:nowrap}
+    .modal-item{display:flex;align-items:center;gap:12px;background:#1a2550;border-radius:12px;padding:14px 16px;color:#e6e9f5;transition:background .15s ease}
+    .modal-item:hover{background:#212d5c}
+    .modal-item span{font-size:0.92rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+    .modal-item button{background:#4c63f7;color:#fff;border:none;border-radius:8px;padding:8px 18px;cursor:pointer;font-weight:600;white-space:nowrap;flex-shrink:0;transition:background .15s ease}
+    .modal-item button:hover{background:#3b50e0}
     .modal-cerrar{width:100%}
+
+    .modal-agregar{margin-top:4px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08)}
+    .modal-agregar h3{margin:0 0 14px;color:#fff;font-size:1rem}
+    .modal-guardar-mas{width:100%;margin-top:10px;margin-bottom:14px}
   </style>
 </head>
 <body>
@@ -407,6 +413,21 @@
       <h2 id="modalTitulo"></h2>
       <p id="modalSubtitulo"></p>
       <div id="modalLista" class="modal-lista"></div>
+
+      <div class="modal-agregar">
+        <h3>Agregar más a este trabajo</h3>
+        <div class="field">
+          <label>Archivos</label>
+          <input id="modalArchivos" type="file" multiple />
+        </div>
+        <div class="field">
+          <label>Enlaces</label>
+          <div id="modalEnlacesContainer" class="enlaces-container"></div>
+          <button type="button" id="modalBtnAgregarEnlace" class="btn-secondary btn-small">+ Agregar enlace</button>
+        </div>
+        <button type="button" id="modalBtnGuardarMas" class="btn-primary modal-guardar-mas">Agregar a este trabajo</button>
+      </div>
+
       <button id="btnCerrarModal" class="btn-secondary modal-cerrar">Cerrar</button>
     </div>
   </div>
