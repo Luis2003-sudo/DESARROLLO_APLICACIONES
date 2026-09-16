@@ -2,11 +2,8 @@ const $=id=>document.getElementById(id);
 const appPage=$('appPage'),trabajoForm=$('trabajoForm'),btnAdmin=$('btnAdmin'),adminLoginPage=$('adminLoginPage'),adminLoginForm=$('adminLoginForm'),adminUsuario=$('adminUsuario'),adminPassword=$('adminPassword'),btnCancelarAdmin=$('btnCancelarAdmin'),adminPage=$('adminPage'),btnVolver=$('btnVolver'),adminForm=$('adminForm'),adminUnidad=$('adminUnidad'),adminSemana=$('adminSemana'),adminTexto=$('adminTexto'),adminContenidoLista=$('adminContenidoLista'),trabajosContainer=$('trabajosContainer'),unidadesContainer=$('unidadesContainer'),totalTrabajos=$('totalTrabajos'),emptyMessage=$('emptyMessage'),buscar=$('buscar'),filtroUnidad=$('filtroUnidad'),filtroSemana=$('filtroSemana'),limpiarFiltros=$('limpiarFiltros'),btnVerTareas=$('btnVerTareas'),btnMiPerfil=$('btnMiPerfil'),enlacesContainer=$('enlacesContainer'),btnAgregarEnlace=$('btnAgregarEnlace'),modalAdjuntos=$('modalAdjuntos'),modalTitulo=$('modalTitulo'),modalSubtitulo=$('modalSubtitulo'),modalLista=$('modalLista'),btnCerrarModal=$('btnCerrarModal');
 const adminCorrecto='admin@campus.com',passwordAdminCorrecto='admin_2003';
 
-// ⚠️ Proyecto: DESARROLLO_APLICACIONES
-// Reemplaza SUPABASE_KEY con tu clave "anon public" / "publishable key"
-// (Project Settings > API Keys en el panel de Supabase)
 const SUPABASE_URL='https://moanobzutufwhucxiurm.supabase.co';
-const SUPABASE_KEY='PEGA_AQUI_TU_ANON_KEY';
+const SUPABASE_KEY='sb_publishable_qeneiL045GECbtOIFWhslA_p7qE8GMY';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
 let trabajos=[];
@@ -28,7 +25,6 @@ function mostrarApp(){adminLoginPage.classList.add('hidden');adminPage.classList
 
 mostrarApp();
 
-// ---- Enlaces dinámicos en el formulario de admin ----
 function agregarFilaEnlace(nombre='',url=''){
   const row=document.createElement('div');
   row.className='enlace-row';
